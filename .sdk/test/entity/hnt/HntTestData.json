@@ -1,0 +1,27 @@
+{
+  "existing": {
+    "hnt": {
+      "HNT00": {
+        "id": "HNT00"
+      },
+      "HNT01": {
+        "id": "HNT01"
+      },
+      "HNT02": {
+        "id": "HNT02"
+      }
+    }
+  },
+  "new": {
+    "hnt": {
+      "hnt_ref01": {}
+    }
+  },
+  "requests": {
+    "POST /h/{id}": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

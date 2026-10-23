@@ -1,0 +1,21 @@
+# API Information
+
+
+main: {
+  kit: {
+    info: {
+      auth: false
+      description: "Instant no-signup webhook/HTTP request inspector. Inbound-only."
+      servers: [
+        {
+          url: "https://catchr.perch-app.workers.dev"
+        }
+      ]
+      summary: "Instant no-signup webhook/HTTP request inspector."
+      title: "Catchr"
+      version: "1.0.0"
+      website: "https://catchr.perch-app.workers.dev"
+    }
+  }
+}
+

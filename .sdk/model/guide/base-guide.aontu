@@ -1,0 +1,45 @@
+# Generated from the API definition and overwritten on every build: do not
+# edit this file. Put customizations in the guide entry file, which includes
+# this one and overrides its defaults:
+#   guide.aontu
+
+guide: {
+  metrics: count: entity: 4
+  metrics: count: path: 6
+  metrics: count: method: 8
+
+  entity: bin: {
+    path: "/api/bins": {
+      op: create: method: *POST
+    }
+    path: "/api/bins/{id}/public": {
+      action: "public": {}
+      op: create: method: *POST
+      op: remove: method: *DELETE
+    }
+    path: "/api/bins/{id}/response": {
+      action: "response": {}
+      op: create: method: *POST
+      op: remove: method: *DELETE
+    }
+  }
+
+  entity: bin_public: {
+    path: "/api/bins/{id}/public.json": {
+      op: load: method: *GET
+    }
+  }
+
+  entity: bin_request: {
+    path: "/api/bins/{id}/requests": {
+      op: load: method: *GET
+    }
+  }
+
+  entity: hnt: {
+    path: "/h/{id}": {
+      op: create: method: *POST
+    }
+  }
+
+}

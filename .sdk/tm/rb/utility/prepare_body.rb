@@ -1,0 +1,9 @@
+# CatchrHttp SDK utility: prepare_body
+require_relative 'media'
+module CatchrHttpUtilities
+  PrepareBody = ->(ctx) {
+    return nil unless ctx.op.input == "data"
+    return CatchrHttpUtilities.raw_body(ctx.reqdata) if CatchrHttpUtilities.raw_request?(ctx.point)
+    ctx.utility.transform_request.call(ctx)
+  }
+end

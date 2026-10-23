@@ -1,0 +1,18 @@
+# BasicHntFlow
+
+main: kit: flow: BasicHntFlow:
+{
+  entity: "hnt",
+  kind: "basic",
+  name: "BasicHntFlow",
+  step: [
+    {
+      i: {
+        ref: "hnt_ref01"
+      }
+
+      o: "create"
+    }
+  ],
+  "key$": "BasicHntFlow"
+}

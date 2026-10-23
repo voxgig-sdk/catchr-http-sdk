@@ -1,0 +1,242 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Catchr",
+    "version": "1.0.0",
+    "description": "Instant no-signup webhook/HTTP request inspector. Inbound-only."
+  },
+  "servers": [
+    {
+      "url": "https://catchr.perch-app.workers.dev"
+    }
+  ],
+  "paths": {
+    "/api/bins": {
+      "post": {
+        "summary": "Create a bin",
+        "responses": {
+          "200": {
+            "description": "created"
+          }
+        }
+      }
+    },
+    "/h/{id}": {
+      "post": {
+        "summary": "Send/capture a request to a bin",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "captured"
+          }
+        }
+      }
+    },
+    "/api/bins/{id}/requests": {
+      "get": {
+        "summary": "List captured requests (token required). Use wait= to long-poll until one arrives.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "wait",
+            "in": "query",
+            "required": false,
+            "description": "Seconds to block (max 25) until a request arrives — no polling loop.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "required": false,
+            "description": "Only return/wake for requests with ts greater than this.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "requests"
+          }
+        }
+      }
+    },
+    "/api/bins/{id}/response": {
+      "post": {
+        "summary": "Set the bin's custom response (mock a status/body). Token required.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "integer"
+                  },
+                  "content_type": {
+                    "type": "string"
+                  },
+                  "body": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "set"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Reset the bin's response to default 200.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "reset"
+          }
+        }
+      }
+    },
+    "/api/bins/{id}/public": {
+      "post": {
+        "summary": "Make the bin publicly readable at /p/{id} (no token). Off by default; exposes captured data.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "now public"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Make the bin private again.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "now private"
+          }
+        }
+      }
+    },
+    "/api/bins/{id}/public.json": {
+      "get": {
+        "summary": "Read captures of a PUBLIC bin with no token.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "requests"
+          },
+          "403": {
+            "description": "bin is not public"
+          }
+        }
+      }
+    }
+  }
+}

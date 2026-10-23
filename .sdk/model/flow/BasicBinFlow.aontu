@@ -1,0 +1,31 @@
+# BasicBinFlow
+
+main: kit: flow: BasicBinFlow:
+{
+  entity: "bin",
+  kind: "basic",
+  name: "BasicBinFlow",
+  step: [
+    {
+      i: {
+        ref: "bin_ref01"
+      }
+
+      o: "create"
+    }
+
+    {
+      i: {
+        ref: "bin_ref01",
+        suffix: "_rm0"
+      }
+
+      m: {
+        id: "bin01"
+      }
+
+      o: "remove"
+    }
+  ],
+  "key$": "BasicBinFlow"
+}

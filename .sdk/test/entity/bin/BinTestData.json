@@ -1,0 +1,47 @@
+{
+  "existing": {
+    "bin": {
+      "BIN00": {
+        "id": "BIN00"
+      },
+      "BIN01": {
+        "id": "BIN01"
+      },
+      "BIN02": {
+        "id": "BIN02"
+      }
+    }
+  },
+  "new": {
+    "bin": {
+      "bin_ref01": {}
+    }
+  },
+  "requests": {
+    "POST /api/bins/{id}/public": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    },
+    "POST /api/bins/{id}/response": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    },
+    "POST /api/bins": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    },
+    "DELETE /api/bins/{id}/public": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    },
+    "DELETE /api/bins/{id}/response": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

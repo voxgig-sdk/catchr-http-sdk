@@ -1,0 +1,27 @@
+{
+  "existing": {
+    "bin_request": {
+      "BIN_REQUEST00": {
+        "id": "BIN_REQUEST00"
+      },
+      "BIN_REQUEST01": {
+        "id": "BIN_REQUEST01"
+      },
+      "BIN_REQUEST02": {
+        "id": "BIN_REQUEST02"
+      }
+    }
+  },
+  "new": {
+    "bin_request": {
+      "bin_request_ref01": {}
+    }
+  },
+  "requests": {
+    "GET /api/bins/{id}/requests": {
+      "provenance": "operation-contract",
+      "version": 2,
+      "source": "openapi3"
+    }
+  }
+}

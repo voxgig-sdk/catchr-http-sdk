@@ -1,0 +1,173 @@
+
+
+import Path from 'node:path'
+import * as Fs from 'node:fs'
+
+import { test, describe, afterEach } from 'node:test'
+import assert from 'node:assert'
+import { createLiveTransport } from '../../live-runner'
+import { runLiveEntity } from '../../live-entity'
+
+
+import { CatchrHttpSDK, BaseFeature, config, stdutil } from '../../..'
+
+import {
+  envOverride,
+  liveClientOptions,
+  liveDelay,
+  loadEnvLocal,
+  makeCtrl,
+  makeMatch,
+  makeReqdata,
+  makeStepData,
+  makeValid,
+  maybeSkipControl,
+} from '../../utility'
+
+
+loadEnvLocal(__dirname + '/../../../.env.local')
+
+
+describe('BinEntity', async () => {
+
+  // Per-test live pacing. Delay is read from sdk-test-control.json's
+  // `test.live.delayMs`; only sleeps when CATCHR_HTTP_TEST_LIVE=TRUE.
+  afterEach(liveDelay('CATCHR_HTTP_TEST_LIVE'))
+
+  test('instance', async () => {
+    const testsdk = CatchrHttpSDK.test()
+    const ent = testsdk.Bin()
+    assert(null != ent)
+  })
+
+
+  test('validate', async (t) => {
+    if (null == (config as any).feature?.validate) {
+      t.skip('feature not present in this SDK: validate')
+      return
+    }
+    const client = CatchrHttpSDK.test(undefined, { feature: { validate: { active: true } } })
+    await assert.rejects(client.Bin().create({"id":1} as any),
+      (err: any) => 'validate_failed' === err.code)
+  })
+
+
+
+  test('basic', async (t) => {
+
+    const live = 'TRUE' === process.env.CATCHR_HTTP_TEST_LIVE
+    for (const op of ['create']) {
+      if (!live && maybeSkipControl(t, 'entityOp', 'bin.' + op, live)) return
+    }
+
+    
+    const setup = basicSetup()
+    if (setup.live) {
+      return runLiveEntity(setup, {"active":true,"alias":{"field":{}},"fields":{"id":{"a":true,"h":"Id","n":"id","r":false,"t":"`$STRING`","key$":"id","index$":0}},"id":{"field":"id","name":"id"},"name":"bin","op":{"create":{"input":"data","name":"create","points":[{"a":true,"co":{"id":"POST /api/bins/{id}/public","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}],"query":[{"a":true,"k":"query","n":"token","or":"token","r":true,"t":"`$STRING`","index$":0}]},"k":"http","m":"POST","o":"/api/bins/{id}/public","q":{"$action":"public","exist":["id","token"]},"r":{},"s":[{"lit":"api"},{"lit":"bins"},{"var":"id"},{"lit":"public"}],"t":{"req":"`reqdata`","res":"`body`"},"index$":0},{"a":true,"bf":["body","content_type","status"],"co":{"id":"POST /api/bins/{id}/response","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}],"query":[{"a":true,"k":"query","n":"token","or":"token","r":true,"t":"`$STRING`","index$":0}]},"k":"http","m":"POST","o":"/api/bins/{id}/response","q":{"$action":"response","exist":["id","token"]},"r":{},"s":[{"lit":"api"},{"lit":"bins"},{"var":"id"},{"lit":"response"}],"t":{"req":"`reqdata`","res":"`body`"},"index$":1},{"a":true,"co":{"id":"POST /api/bins","source":"openapi3","version":2},"g":{},"k":"http","m":"POST","o":"/api/bins","q":{},"r":{},"s":[{"lit":"api"},{"lit":"bins"}],"t":{"req":"`reqdata`","res":"`body`"},"index$":2}],"key$":"create"},"remove":{"input":"data","name":"remove","points":[{"a":true,"co":{"id":"DELETE /api/bins/{id}/public","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}],"query":[{"a":true,"k":"query","n":"token","or":"token","r":true,"t":"`$STRING`","index$":0}]},"k":"http","m":"DELETE","o":"/api/bins/{id}/public","q":{"$action":"public","exist":["id","token"]},"r":{},"s":[{"lit":"api"},{"lit":"bins"},{"var":"id"},{"lit":"public"}],"t":{"req":"`reqdata`","res":"`body`"},"index$":0},{"a":true,"co":{"id":"DELETE /api/bins/{id}/response","source":"openapi3","version":2},"g":{"params":[{"a":true,"k":"param","n":"id","or":"id","r":true,"t":"`$STRING`","index$":0}],"query":[{"a":true,"k":"query","n":"token","or":"token","r":true,"t":"`$STRING`","index$":0}]},"k":"http","m":"DELETE","o":"/api/bins/{id}/response","q":{"$action":"response","exist":["id","token"]},"r":{},"s":[{"lit":"api"},{"lit":"bins"},{"var":"id"},{"lit":"response"}],"t":{"req":"`reqdata`","res":"`body`"},"index$":1}],"key$":"remove"}},"relations":{"ancestors":[]},"key$":"bin","name__orig":"bin","Name":"Bin","name_":"bin","name-":"bin","NAME":"BIN","index$":0}, {"active":true,"entity":"bin","key$":"BasicBinFlow","kind":"basic","name":"BasicBinFlow","param":{},"step":[{"a":true,"d":{},"i":{"ref":"bin_ref01"},"m":{},"o":"create","s":[],"v":[],"index$":0},{"a":false,"d":{},"i":{"ref":"bin_ref01","suffix":"_rm0"},"m":{"id":"bin01"},"o":"remove","s":[],"v":[],"unreachable":true}]}, 'Bin', {"POST /api/bins/{id}/public":{"protocol":"http","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string"},"index$":0},{"name":"token","in":"query","required":true,"schema":{"type":"string"},"index$":1}]},"POST /api/bins/{id}/response":{"protocol":"http","requestBody":{"content":{"application/json":{"schema":{"type":"object","properties":{"status":{"type":"integer"},"content_type":{"type":"string"},"body":{"type":"string"}}}}}},"parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string"},"index$":0},{"name":"token","in":"query","required":true,"schema":{"type":"string"},"index$":1}]},"POST /api/bins":{"protocol":"http","parameters":[]},"DELETE /api/bins/{id}/public":{"protocol":"http","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string"},"index$":0},{"name":"token","in":"query","required":true,"schema":{"type":"string"},"index$":1}]},"DELETE /api/bins/{id}/response":{"protocol":"http","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string"},"index$":0},{"name":"token","in":"query","required":true,"schema":{"type":"string"},"index$":1}]}}, { strict: LIVE_STRICT, t })
+    }
+    const client = setup.client
+    const struct = setup.struct
+
+    const isempty = struct.isempty
+    const select = struct.select
+
+
+    // CREATE
+    const bin_ref01_ent = client.Bin()
+    let bin_ref01_data = setup.data.new.bin['bin_ref01']
+
+    bin_ref01_data = (await bin_ref01_ent.create(bin_ref01_data)).data()
+    assert(null != bin_ref01_data.id)
+
+
+  })
+})
+
+
+
+// main.kit.test.live.strict is true (the default is true): a live
+// request that fails, or a live test missing an input it needs,
+// fails the test.
+// An account with no record for a test to read skips it either way.
+const LIVE_STRICT = true
+
+function basicSetup(extra?: any) {
+  // TODO: fix test def options
+  const options: any = {} // null
+
+  // TODO: needs test utility to resolve path
+  const entityDataFile =
+    Path.resolve(__dirname, 
+      '../../../../.sdk/test/entity/bin/BinTestData.json')
+
+  // TODO: file ready util needed?
+  const entityDataSource = Fs.readFileSync(entityDataFile).toString('utf8')
+
+  // TODO: need a xlang JSON parse utility in voxgig/struct with better error msgs
+  const entityData = JSON.parse(entityDataSource)
+
+  options.entity = entityData.existing
+
+  let client = CatchrHttpSDK.test(options, extra)
+  const struct = client.utility().struct
+  const merge = struct.merge
+  const transform = struct.transform
+
+  let idmap = transform(
+    ['bin01','bin02','bin03'],
+    {
+      '`$PACK`': ['', {
+        '`$KEY`': '`$COPY`',
+        '`$VAL`': ['`$FORMAT`', 'upper', '`$COPY`']
+      }]
+    })
+
+  const env = envOverride({
+    'CATCHR_HTTP_TEST_BIN_ENTID': idmap,
+    'CATCHR_HTTP_TEST_LIVE': 'FALSE',
+    'CATCHR_HTTP_TEST_EXPLAIN': 'FALSE',
+  })
+
+  idmap = env['CATCHR_HTTP_TEST_BIN_ENTID']
+
+  const live = 'TRUE' === env.CATCHR_HTTP_TEST_LIVE
+
+  const transport = createLiveTransport()
+  if (live) {
+    const rawIds = process.env['CATCHR_HTTP_TEST_BIN_ENTID']
+    idmap = rawIds && rawIds.trim() ? JSON.parse(rawIds) : {}
+    if (!idmap || Array.isArray(idmap) || typeof idmap !== 'object') {
+      throw new Error('Live ENTID must be a JSON object')
+    }
+    client = new CatchrHttpSDK(merge([
+      // FIRST, so the generated fields below win: sdk-test-control.json's
+      // test.client.options adds to the live client, it does not redirect it.
+      liveClientOptions(),
+      {
+      },
+      // 'extra || {}', not a bare 'extra': struct.merge returns UNDEFINED when the
+      // last entry is undefined, and basicSetup is normally called with no
+      // argument at all - so a bare 'extra' silently discarded the apikey
+      // and server values above and handed the SDK undefined. Harmless
+      // while there was nothing in that object; not harmless now.
+      extra || {},
+      { system: { fetch: transport.fetch } }
+    ]))
+  }
+
+  const setup = {
+    idmap,
+    env,
+    options,
+    client,
+    struct,
+    data: entityData,
+    explain: 'TRUE' === env.CATCHR_HTTP_TEST_EXPLAIN,
+    live,
+    transport,
+    now: Date.now(),
+  }
+
+  return setup
+}
+  

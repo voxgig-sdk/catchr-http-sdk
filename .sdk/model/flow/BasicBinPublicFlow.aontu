@@ -1,0 +1,32 @@
+# BasicBinPublicFlow
+
+main: kit: flow: BasicBinPublicFlow:
+{
+  entity: "bin_public",
+  kind: "basic",
+  name: "BasicBinPublicFlow",
+  step: [
+    {
+      i: {
+        ref: "bin_public_ref01",
+        srcdatavar: "bin_public_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "bin_public01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-bin_public_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicBinPublicFlow"
+}

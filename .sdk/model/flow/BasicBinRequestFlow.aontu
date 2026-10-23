@@ -1,0 +1,32 @@
+# BasicBinRequestFlow
+
+main: kit: flow: BasicBinRequestFlow:
+{
+  entity: "bin_request",
+  kind: "basic",
+  name: "BasicBinRequestFlow",
+  step: [
+    {
+      i: {
+        ref: "bin_request_ref01",
+        srcdatavar: "bin_request_ref01_data",
+        suffix: "_dt0"
+      }
+
+      m: {
+        id: "bin_request01"
+      }
+
+      o: "load",
+      v: [
+        {
+          apply: "TextFieldMark",
+          def: {
+            mark: "Mark01-bin_request_ref01"
+          }
+        }
+      ]
+    }
+  ],
+  "key$": "BasicBinRequestFlow"
+}
